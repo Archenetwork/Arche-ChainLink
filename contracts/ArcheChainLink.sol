@@ -1,3 +1,5 @@
+pragma solidity ^ 0.8.4;
+
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./interfaces/AggregatorV3Interface.sol";
 
@@ -23,7 +25,7 @@ contract ArcheChainLink is AggregatorV3Interface, Ownable {
     uint256 constant private PHASE_SIZE = 16;
     uint256 constant private MAX_ID = 2 ** (PHASE_OFFSET + PHASE_SIZE) - 1;
 
-    constructor(address _aggregator) public {
+    constructor(address _aggregator){
         setAggregator(_aggregator);
     }
 
