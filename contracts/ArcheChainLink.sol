@@ -1,8 +1,5 @@
 pragma solidity ^0.8.4;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "./interfaces/AggregatorV3Interface.sol";
-
 /**
  * @notice  In order to ensure the authority of the contract,
  * this contract has introduced Ownable.sol provided by Openzeppelin,
@@ -56,16 +53,16 @@ contract ArcheChainLink is AggregatorV3Interface, Ownable {
      */
     function getRoundData(uint80 _roundId) public view virtual override returns (
         uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound){
-        (uint16 phaseId, uint64 aggregatorRoundId) = parseIds(_roundId);
+        (uint16 phaseIds, uint64 aggregatorRoundId) = parseIds(_roundId);
         (
         roundId,
         answer,
         startedAt,
         updatedAt,
         answeredInRound
-        ) = phaseAggregators[phaseId].getRoundData(aggregatorRoundId);
+        ) = phaseAggregators[phaseIds].getRoundData(aggregatorRoundId);
 
-        return addPhaseIds(roundId, answer, startedAt, updatedAt, answeredInRound, phaseId);
+        return addPhaseIds(roundId, answer, startedAt, updatedAt, answeredInRound, phaseIds);
     }
 
     /**
@@ -209,18 +206,18 @@ contract ArcheChainLink is AggregatorV3Interface, Ownable {
     }
 
     function parseIds(uint256 _roundId) internal pure returns (uint16, uint64){
-        uint16 phaseId = uint16(_roundId >> PHASE_OFFSET);
+        uint16 phaseIds = uint16(_roundId >> PHASE_OFFSET);
         uint64 aggregatorRoundId = uint64(_roundId);
-        return (phaseId, aggregatorRoundId);
+        return (phaseIds, aggregatorRoundId);
     }
 
-    function addPhaseIds(uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound, uint16 phaseId) internal pure returns (uint80, int256, uint256, uint256, uint80){
+    function addPhaseIds(uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound, uint16 phaseIds) internal pure returns (uint80, int256, uint256, uint256, uint80){
         return (
-        addPhase(phaseId, uint64(roundId)),
+        addPhase(phaseIds, uint64(roundId)),
         answer,
         startedAt,
         updatedAt,
-        addPhase(phaseId, uint64(answeredInRound))
+        addPhase(phaseIds, uint64(answeredInRound))
         );
     }
 
@@ -234,5 +231,4 @@ contract ArcheChainLink is AggregatorV3Interface, Ownable {
     }
 
 }
-
 
