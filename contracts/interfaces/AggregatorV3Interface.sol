@@ -1,3 +1,5 @@
+pragma solidity ^0.8.4;
+
 // AggregatorV3Interface
 // Some methods of the AggregatorInterface are still in use
 interface AggregatorV3Interface {
