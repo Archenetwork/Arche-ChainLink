@@ -1,16 +1,9 @@
 // SPDX-License-Identifier: Arche
 pragma solidity ^0.8.4;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
 import "./interfaces/AggregatorV3Interface.sol";
-/**
- * @notice  In order to ensure the authority of the contract,
- * this contract has introduced Ownable.sol provided by Openzeppelin,
- * please do not introduce it again in your own contract,
- * otherwise an error message will be returned
- */
 
-contract ArcheChainLink is AggregatorV3Interface, Ownable {
+contract ArcheChainLink is AggregatorV3Interface {
 
     struct Phase {
         uint16 id;
@@ -172,28 +165,6 @@ contract ArcheChainLink is AggregatorV3Interface, Ownable {
         return currentPhase.aggregator.description();
     }
 
-    /**
-     * @notice Allows the owner to propose a new address for the aggregator
-     * @param _aggregator The new address for the aggregator contract
-     */
-    function proposeAggregator(address _aggregator) external onlyOwner() {
-        proposedAggregator = AggregatorV3Interface(_aggregator);
-    }
-
-    /**
-     * @notice Allows the owner to confirm and change the address
-     * to the proposed aggregator
-     * @dev Reverts if the given address doesn't match what was previously
-     * proposed
-     * @param _aggregator The new address for the aggregator contract
-     */
-    function confirmAggregator(address _aggregator) external onlyOwner() {
-        require(_aggregator == address(proposedAggregator), "Invalid proposed aggregator");
-        delete proposedAggregator;
-        setAggregator(_aggregator);
-    }
-
-
     /*
      * Internal
      */
@@ -234,4 +205,6 @@ contract ArcheChainLink is AggregatorV3Interface, Ownable {
     }
 
 }
+
+
 
